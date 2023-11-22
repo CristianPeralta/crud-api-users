@@ -1,13 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-const { addUser } = require("../dynamodb");
+const { addUser, getUser, getUsers, deleteUser } = require("../dynamodb");
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
+router.get('/', getUsers);
 router.post('/', addUser);
+router.get('/:id', getUser);
+router.delete('/:id', deleteUser);
 
 module.exports = router;

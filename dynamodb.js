@@ -49,7 +49,65 @@ const addUser = async (req, res) => {
     }
 };
 
+const getUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const params = {
+            TableName: TABLE_USERS,
+            Key: {
+                id
+            }
+        };
+        const user = await dynamoClient.get(params).promise();
+        return res.status(200).json({ user });
+    } catch (error) {
+        res.status(error.code || 400).json({
+            errors: {
+                msg: error.message,
+            },
+        });
+    }
+};
+
+const getUsers = async (req, res) => {
+    try {
+        const params = { TableName: TABLE_USERS };
+        const users = await dynamoClient.scan(params).promise();
+        return res.status(200).json({ users });
+    } catch (error) {
+        res.status(error.code || 400).json({
+            errors: {
+                msg: error.message,
+            },
+        });
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const  params = {
+            TableName: TABLE_USERS,
+            Key: {
+                id
+            }
+        };
+ 
+        const deletedUser = await dynamoClient.delete(params).promise();
+        return res.status(200).json({ deletedUser });
+    } catch (error) {
+        res.status(error.code || 400).json({
+            errors: {
+                msg: error.message,
+            },
+        });
+    }
+};
+
 module.exports = {
     listTables,
-    addUser
+    addUser,
+    getUser,
+    getUsers,
+    deleteUser
 };
